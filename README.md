@@ -1,4 +1,4 @@
-# MongoDB - Pokedex
+# SEED y Paginación - Pokedex
 
 Esta sección se enfoca en la grabación a base de datos y más formas de hacer inserciones. Los temas que se ven son:
 
