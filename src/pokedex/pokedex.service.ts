@@ -4,6 +4,7 @@ import { Model, isValidObjectId } from 'mongoose';
 
 import { CreatePokedexDto, UpdatePokedexDto } from './dto';
 import { Pokedex } from './entities/pokedex.entity';
+import { PaginationDto } from 'src/common/dto/pagination.dto';
 
 @Injectable()
 export class PokedexService {
@@ -27,8 +28,29 @@ export class PokedexService {
     }
   }
 
-  findAll() {
-    return `This action returns all pokedex`;
+  async findAll( paginationDto: PaginationDto ) {
+    const { limit = 10, offset = 0 } = paginationDto;
+
+    const [ total, pokemons ] = await Promise.all([ 
+      this.pokedexModel.countDocuments(),
+      this.pokedexModel.find()
+                       .limit( limit )
+                       .skip( offset )
+                       .sort({ no: 1 })
+                       .select('-__v')
+    ]);
+
+    const totalPaginas = Math.ceil((total * 1) / limit);
+
+    const paginado = {
+      antes: offset - 1,
+      actual: offset,
+      despues: offset + 1,
+      total,
+      totalPaginas,
+    };
+    
+    return { paginado, pokemons };
   }
 
   async findOne( term: string ) {
@@ -77,7 +99,6 @@ export class PokedexService {
     // const pokemon = await this.findOne( id );
 
     // await pokemon.deleteOne();
-
     const { deletedCount } = await this.pokedexModel.deleteOne({ _id: id });
 
     if( deletedCount === 0 ) {
