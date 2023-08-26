@@ -5,6 +5,7 @@ import { join } from 'path';
 
 import { PokedexModule } from './pokedex/pokedex.module';
 import { CommonModule } from './common/common.module';
+import { SeedModule } from './seed/seed.module';
 
 @Module({
   imports: [ 
@@ -13,7 +14,8 @@ import { CommonModule } from './common/common.module';
     }), 
     MongooseModule.forRoot('mongodb://localhost:27017/nest-pokemon'),
     PokedexModule,
-    CommonModule
+    CommonModule,
+    SeedModule
   ]
 })
 export class AppModule {}
